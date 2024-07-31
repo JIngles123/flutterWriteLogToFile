@@ -44,22 +44,25 @@ class FileWriteLog {
         DateTime dateTime = DateFormat('yyyy-MM-dd').parse(curLogTime);
         DateTime now = DateTime.now();
         Duration duration = now.difference(dateTime);
-        if (duration.inDays >= 1) {//每天创建一个
-          //压缩前一天的日志文件,并删除前一天的源文件
-          compressLog(fileName);
+        dynamic fileSize = await getFileSize(fileName);
+        if (duration.inDays >= 1 || fileSize>=50) {//每天创建一个or单个文件大于指定存储空间 50M 时
+          //压缩前一个的日志文件,并删除当前的源文件，再存储至新文件
+          duration.inDays >= 1 ? compressLogSeparatedByTime(fileName):compressLogSeparatedBySpace(fileName);
           deleteFile(fileName);
-          //新建当天的日志文件
+
           fileName = '';
           await createFileName();
         }
-        
+
         /*DateTime dateTime = DateFormat('yyyy-MM-dd HH:mm:ss').parse(curLogTime);
         DateTime now = DateTime.now();
         Duration duration = now.difference(dateTime);
-        if (duration.inMinutes == 2) {//每隔2分钟创建一个
+        dynamic fileSize = await getFileSize(fileName);
+        if (duration.inMinutes == 2 || fileSize>=20) {//每隔2分钟或者大于20k创建一个
           //压缩前一天的日志文件,并删除前一天的源文件
-          compressLog(fileName);
+          duration.inMinutes == 2 ? compressLogSeparatedByTime(fileName):compressLogSeparatedBySpace(fileName);
           deleteFile(fileName);
+
           fileName = '';
           await createFileName();
         }*/
@@ -74,10 +77,34 @@ class FileWriteLog {
     }
   }
 
-  compressLog(String filePath) async {
+  compressLogSeparatedByTime(String filePath) async {
     // 指定源文件和压缩文件路径
     String sourceFilePath = filePath;
-    String compressedFilePath = '$filePath.gzip';
+    String compressedFilePath = '$filePath.gzip'; // 20xx-xx-xx.log.gzip
+    // 读取源文件
+    File sourceFile = File(sourceFilePath);
+    List<int> fileBytes = await sourceFile.readAsBytes();
+
+    // 压缩文件
+    GZipEncoder encoder = GZipEncoder();
+    List<int> compressedBytes = encoder.encode(fileBytes)!;
+    File compressedFile = File(compressedFilePath);
+    await compressedFile.writeAsBytes(compressedBytes);
+
+    print('前一个文件已压缩为 $compressedFilePath');
+  }
+
+  compressLogSeparatedBySpace(String filePath) async {
+    // 指定源文件和压缩文件路径
+    String sourceFilePath = filePath;
+    
+    String begin = filePath.substring(0,filePath.length-4);
+    String end = filePath.substring(filePath.length-4);
+    DateTime now = DateTime.now();
+    int hour = now.hour;
+    int minute = now.minute;
+    int second = now.second;
+    String compressedFilePath = '${begin}T$hour:$minute:${second}Z$end.gzip';// 20xx-xx-xxT23:59:59Z.log.gzip
 
     // 读取源文件
     File sourceFile = File(sourceFilePath);
@@ -89,7 +116,7 @@ class FileWriteLog {
     File compressedFile = File(compressedFilePath);
     await compressedFile.writeAsBytes(compressedBytes);
 
-    print('前一天的文件已压缩为 $compressedFilePath');
+    print('前一个文件已压缩为 $compressedFilePath');
   }
   
   deleteFile(String filePath) async {
@@ -103,6 +130,25 @@ class FileWriteLog {
       }
     } catch (e) {
       print('删除文件出错: $e');
+    }
+  }
+
+  getFileSize(String filePath) async {
+    try {
+      final file = File(filePath);
+      int size = await file.length();
+  
+      // 转换单位（如需要转换为KB或MB）
+      double sizeInKB = size / 1024;
+      double sizeInMB = size / 1024 / 1024;
+  
+      //print('File size in bytes: $size');
+      //print('File size in kilobytes: ${sizeInKB.toStringAsFixed(2)}');
+      //print('File size in megabytes: ${sizeInMB.toStringAsFixed(2)}');
+      return double.parse(sizeInKB.toStringAsFixed(2));
+    } catch (e) {
+      print('Error getting file size: $e');
+      return -1;
     }
   }
 
