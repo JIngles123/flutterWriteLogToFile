@@ -1,0 +1,74 @@
+Flutter crash report.
+Please report a bug at https://github.com/flutter/flutter/issues.
+
+## command
+
+flutter run
+
+## exception
+
+HttpException: HttpException: Connection closed before full header was received, uri = http://127.0.0.1:44456/b2d1Ak7hItE=/ws
+
+```
+```
+
+## flutter doctor
+
+```
+[32m[✓][39m Flutter (Channel stable, 3.19.5, on Ubuntu 22.04.4 LTS 6.5.0-44-generic,
+    locale zh_CN.UTF-8)
+    [32m•[39m Flutter version 3.19.5 on channel stable at /home/jlm/flutter
+    [32m•[39m Upstream repository https://github.com/flutter/flutter.git
+    [32m•[39m Framework revision 300451adae (4 个月前), 2024-03-27 21:54:07 -0500
+    [32m•[39m Engine revision e76c956498
+    [32m•[39m Dart version 3.3.3
+    [32m•[39m DevTools version 2.31.1
+    [32m•[39m Pub download mirror https://pub.flutter-io.cn
+    [32m•[39m Flutter download mirror https://storage.flutter-io.cn
+
+[32m[✓][39m Android toolchain - develop for Android devices (Android SDK version 29.0.3)
+    [32m•[39m Android SDK at
+      /home/jlm/Downloads/android-sdk_r24.4.1-linux/android-sdk-linux
+    [32m•[39m Platform android-29, build-tools 29.0.3
+    [32m•[39m ANDROID_HOME =
+      :/home/jlm/Downloads/android-sdk_r24.4.1-linux/android-sdk-linux
+    [32m•[39m Java binary at: /usr/lib/jvm/java-1.17.0-openjdk-amd64/bin/java
+    [32m•[39m Java version OpenJDK Runtime Environment (build 17.0.11+9-Ubuntu-122.04.1)
+    [32m•[39m All Android licenses accepted.
+
+[32m[✓][39m Chrome - develop for the web
+    [32m•[39m Chrome at google-chrome
+
+[32m[✓][39m Linux toolchain - develop for Linux desktop
+    [32m•[39m Ubuntu clang version 14.0.0-1ubuntu1.1
+    [32m•[39m cmake version 3.22.1
+    [32m•[39m ninja version 1.10.1
+    [32m•[39m pkg-config version 0.29.2
+
+[33m[!][39m Android Studio (not installed)
+    [32m•[39m Android Studio not found; download from
+      https://developer.android.com/studio/index.html
+      (or visit https://flutter.dev/docs/get-started/install/linux#android-setup
+      for detailed instructions).
+
+[32m[✓][39m VS Code (version 1.89.1)
+    [32m•[39m VS Code at /usr/share/code
+    [32m•[39m Flutter extension version 3.92.0
+
+[33m[!][39m Proxy Configuration
+    [32m•[39m HTTP_PROXY is set
+    [32m•[39m NO_PROXY is localhost,127.0.0.0/8,::1
+    [32m•[39m NO_PROXY contains localhost
+    [33m![39m NO_PROXY does not contain 127.0.0.1
+    [32m•[39m NO_PROXY contains ::1
+
+[32m[✓][39m Connected device (2 available)
+    [32m•[39m Linux (desktop) • linux  • linux-x64      • Ubuntu 22.04.4 LTS
+      6.5.0-44-generic
+    [32m•[39m Chrome (web)    • chrome • web-javascript • Google Chrome 127.0.6533.72
+
+[32m[✓][39m Network resources
+    [32m•[39m All expected network resources are available.
+
+[33m![39m Doctor found issues in 2 categories.
+```
