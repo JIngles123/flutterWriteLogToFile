@@ -145,7 +145,7 @@ class FileWriteLog {
       //print('File size in bytes: $size');
       //print('File size in kilobytes: ${sizeInKB.toStringAsFixed(2)}');
       //print('File size in megabytes: ${sizeInMB.toStringAsFixed(2)}');
-      return double.parse(sizeInKB.toStringAsFixed(2));
+      return double.parse(sizeInMB.toStringAsFixed(2));
     } catch (e) {
       print('Error getting file size: $e');
       return -1;
