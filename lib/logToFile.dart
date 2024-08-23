@@ -199,6 +199,7 @@ class FileWriteLog {
         print("创建文件失败: $e");
       }
     }
+    deleteOldFiles();//每创建一个文件就判断是否删除以前的旧文件
     return fileName;
   }
 
@@ -242,22 +243,30 @@ class FileWriteLog {
           List<String> parts = element.split('/'); // 使用 '/' 分割路径
           // 获取最后一段路径
           String lastSegment = parts.isNotEmpty ? parts.last : '';
-          if (lastSegment.endsWith(fileType)) {
-            lastSegment = lastSegment.substring(0, lastSegment.length - 4);
+
+          // 20xx-xx-xxT23:59:59Z.log.gzip  or  20xx-xx-xx.log.gzip
+          if (lastSegment.endsWith(fileType)||lastSegment.endsWith("$fileType.gzip")) {// 去掉文件or压缩包的后缀
+            int lIndex = lastSegment.indexOf('l');
+            lastSegment = lastSegment.substring(0, lIndex-1);
           }
-          // jdLog('获取的文件名字22------$lastSegment');
+          if(lastSegment.contains('T')){// 说明此压缩包是一天中的分时间压缩的包
+            int tIndex = lastSegment.indexOf('T');
+            lastSegment = lastSegment.substring(0, tIndex);
+          }
+
+          // jdLog('获取的文件名字22------$lastSegment'); //2024-08-23
           DateTime? time = TimeTool.parse(lastSegment);
           if (time is DateTime) {
             Duration difference = time.difference(nowTime);
             int days = difference.inDays;
-            if (days > 7) {
-              // 删除超过7天的文件
-              jdLog('离现在差距$days天 删除了-------->');
+            if (days <= -30) {
+              // 删除超过30天的文件
+              jdLog('离现在差距$days天 计划删除-------->$element');
               FileTool.deleteFile(element);
             }
           }
         } catch (onError) {
-          jdLog('转换后的onError--------> $onError');
+          jdLog('$element 转换后的onError--------> $onError');
         }
       });
     });
